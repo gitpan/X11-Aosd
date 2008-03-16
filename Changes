@@ -1,0 +1,14 @@
+Revision history for Perl extension X11::Aosd.
+
+0.02 Sun Mar 16 2008 joern
+    - first public CPAN release
+    - binds all functions from aosd.h
+    - fully documented
+    - thanks to Thorsten Schönfeld for supporting me
+      with the details of Cairo/Glib/Perl binding stuff.
+
+0.01 Sat Mar 15 2008 joern
+    - first internal skeleton release for discussion
+      on further implementation
+    - binds minimal stuff, in particular the
+      Cairo & Pango glue is missing for now
