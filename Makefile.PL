@@ -2,16 +2,20 @@ use strict;
 use 5.008;
 
 use ExtUtils::MakeMaker;
-use ExtUtils::Depends;
-use ExtUtils::PkgConfig;
 
 main: {
-    my %libaosd = ExtUtils::PkgConfig->find("libaosd");
-    my $package = ExtUtils::Depends->new('X11::Aosd', 'Cairo', 'Gtk2');
+    my $package;
+    eval {
+        require ExtUtils::Depends;
+        require ExtUtils::PkgConfig;
 
-    $package->set_inc($libaosd{cflags});
-    $package->set_libs($libaosd{libs});
+        my %libaosd = ExtUtils::PkgConfig->find("libaosd");
+        $package = ExtUtils::Depends->new('X11::Aosd', 'Cairo', 'Gtk2');
 
+        $package->set_inc($libaosd{cflags});
+        $package->set_libs($libaosd{libs});
+    };
+    
     WriteMakefile(
         NAME            => 'X11::Aosd',
         VERSION_FROM    => 'lib/X11/Aosd.pm',
@@ -29,10 +33,10 @@ main: {
             SUFFIX   => "gz",
             POSTOP   => q[mkdir -p dist && mv X11-Aosd*tar.gz dist/],
         },
-        $package->get_makefile_vars(),
+        ($package ? $package->get_makefile_vars() : ())
     );
 
-    if  (eval {require ExtUtils::Constant; 1}) {
+    if  ( eval {require ExtUtils::Constant; 1} ) {
         my @names = (
             { name => "COORDINATE_CENTER",      macro => 1 },
             { name => "COORDINATE_MAXIMUM",     macro => 1 },

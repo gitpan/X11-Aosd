@@ -5,6 +5,9 @@ This Perl extensions binds the aosd library, which can be found here:
 
   http://www.atheme.org/projects/libaosd.shtml
 
+With this module you are able to program Cairo powered on screen
+display graphics in Perl.
+
 For details refer to the X11::Aosd pod documentation or point your
 browser to
 

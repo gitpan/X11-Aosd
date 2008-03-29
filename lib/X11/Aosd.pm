@@ -1,5 +1,5 @@
 #----------------------------------------------------------------------- 
-# $Id: Aosd.pm,v 1.3 2008/03/16 15:18:41 joern Exp $
+# $Id: Aosd.pm,v 1.4 2008/03/29 16:26:56 joern Exp $
 #----------------------------------------------------------------------- 
 # X11::Aosd - libaosd binding for Cairo powered on screen display
 #
@@ -12,7 +12,7 @@
 #-----------------------------------------------------------------------
 package X11::Aosd;
 
-our $VERSION = '0.02';
+our $VERSION = '0.03';
 
 use 5.008;
 use strict;
@@ -105,18 +105,25 @@ X11::Aosd - libaosd binding for Cairo powered on screen display
 
 =head1 DESCRIPTION
 
-This Perl extensions binds the aosd library. For now just the Cairo
-part is supported, Pango support may be added later.
+This Perl extension binds the aosd library. For now just the Cairo
+part is bound, Pango support may be added later.
 
 =head1 REQUIREMENTS
 
-This module needs libaosd version 2.4.0 or better installed
+This module needs libaosd version 0.2.4 or better installed
 on your system. Additionally the following Perl modules are
 required:
 
   Glib
-  Cairo
   Gtk2
+  Cairo
+
+The development packages for the correspondent C libraries
+are required as well:
+
+  libglib2.0-dev
+  libgtk2.0-dev
+  libcairo2-dev
 
 =head1 METHODS
 
@@ -171,7 +178,7 @@ and $ordinate.
 
 =item $aosd->set_renderer($renderer, $user_data)
 
-Apply a renderer to the OSD window, which is subroutine resp. a closure
+Apply your renderer to the OSD window. This is a subroutine resp. a closure
 with this signature:
 
   sub renderer {
@@ -179,14 +186,15 @@ with this signature:
     ...
   }
 
-$cr is the Cairo surface managed by libaosd you can draw on. Anytime
-the surface needs to be (re)drawn it's called. You can force calling
-it using the $aosd->render method (or even better $aosd->update - see below).
+$cr is the Cairo context managed by libaosd you can draw with. Anytime
+the surface needs to be (re)drawn the renderer is called. You can force
+calling it using the $aosd->render method (or even better
+$aosd->update - see below).
 
 =item $aosd->set_mouse_event_cb($callback, $user_data)
 
 libaosd catches mouse clicks on the window. You can handle these events
-by specifiying a callback, which has the following signature:
+by attaching a callback, which has the following signature:
 
   sub mouse_event {
     my ($event, $user_data) = @_;
@@ -267,7 +275,8 @@ Hides the OSD window.
 libaosd can take control of the mainloop, but note that your program
 blocks when libaosd's mainloop is running. For simple programs
 libaosd's maninloop is Ok, but for more complex situations,
-e.g. drawing an animation, you should use Glib's mainloop instead.
+e.g. drawing an animation, you should use Glib's mainloop instead
+(or any event loop you like, e.g. Event or EV).
 
 Animations are always controlled through timeouts, so with Glib's
 mainloop this will look this way:
@@ -281,12 +290,13 @@ mainloop this will look this way:
     #-- draw animation corresponding to $animation_step.
     ...
     #-- quit mainloop when animation is finished
-    $main_loop->quit if $animation_step == $finished;
+    $main_loop->quit if $animation_step == $animation_last_step;
   });
 
   Glib::Timeout->add (20, sub {
     ++$animation_step;
     $aosd->update;
+    1;
   });
 
   $main_loop->run;
@@ -315,7 +325,7 @@ for this amount of time.
 
 =item $aosd->flash($fade_in_ms, $full_ms, $fade_out_ms)
 
-Fades the OSD window in in $fade_in_ms milliseconds, let it stay
+Fades in the OSD window in $fade_in_ms milliseconds, let it stay
 for $full_ms milliseconds and fades it out in $fade_out_ms milliseconds.
 
 =item $aosd->update

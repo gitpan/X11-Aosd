@@ -1,4 +1,14 @@
+$Id: Changes,v 1.4 2008/03/29 16:28:47 joern Exp $
+
 Revision history for Perl extension X11::Aosd.
+
+0.03 Sat Mar 29 2008 joern
+    - fixed Makefile.PL which crashed on missing ExtUtils::Depends
+      and/or ExtUtils::PkgConfig instead of reporting that these
+      modules are required
+    - cleaned up test planning in t/X11-Aosd.t
+    - minor documentation fixes
+    - removed unneeded aosd_destroy() binding
 
 0.02 Sun Mar 16 2008 joern
     - first public CPAN release

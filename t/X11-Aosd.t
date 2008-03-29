@@ -8,14 +8,16 @@
 use strict;
 use Test::More;
 
-if ( $ENV{DISPLAY} eq '' ) {
-  plan skip_all => 'No X11 server present (DISPLAY is unset)';
-}
-else {
-  plan tests => 16;
-}
+BEGIN {
+    if ( $ENV{DISPLAY} eq '' ) {
+      plan skip_all => 'No X11 server present (DISPLAY is unset)';
+    }
+    else {
+      plan tests => 17;
+    }
 
-BEGIN { use_ok('X11::Aosd', ':all') };
+    use_ok('X11::Aosd', ':all');
+}
 
 my $fail = 0;
 foreach my $constname (qw(

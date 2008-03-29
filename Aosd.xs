@@ -1,5 +1,5 @@
 /*
- * $Id: Aosd.xs,v 1.2 2008/03/16 15:00:35 joern Exp $
+ * $Id: Aosd.xs,v 1.3 2008/03/29 16:28:30 joern Exp $
  *
  * This binds libaosd functions of
  *
@@ -96,12 +96,6 @@ void
 DESTROY (Aosd *aosd)
     CODE:
 	aosd_destroy (aosd);
-
-#Aosd *
-#aosd_new();
-
-void
-aosd_destroy (Aosd *aosd);
 
 #-- object inspectors
 
